@@ -62,14 +62,36 @@ router.post('/update/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.post('/delete', async (req, res) => {
+    // University.updateOne({ name: ' Dinesh ' }, { $set: { name: 'Dinesh KG' } })
+
     try {
-        const university = await University.findById(req.params.id)
-        university.remove()
-        res.send('Successful')
+        University.remove(
+            // { _id: req.params.id },
+            { name: req.body.name },
+            // { address: req.body.address },
+            // { phone: req.body.phone },
+            function (err, result) {
+                if (err) {
+                    res.send(err)
+                } else {
+                    res.send(result)
+                }
+            }
+        )
     } catch (err) {
         res.send('Error: ' + err)
     }
 })
+
+// router.delete('/:id', async (req, res) => {
+//     try {
+//         const university = await University.findById(req.params.id)
+//         university.remove()
+//         res.send('Successful')
+//     } catch (err) {
+//         res.send('Error: ' + err)
+//     }
+// })
 
 module.exports = router

@@ -35,7 +35,7 @@
                 >Search</a
             >
             <a class="nav-link save" href="#save">Add New</a>
-            <a class="nav-link edit" href="#edit">Edit</a>
+            <!-- <a class="nav-link edit" href="#edit">Edit</a> -->
             <a class="nav-link delete" href="#delete">Delete</a>
             <!-- <a
                 class="nav-link disabled"
@@ -161,13 +161,26 @@
             <script>
                 $('#deleteButton').click(function () {
                     name = $('#deleteUninversity').val()
-                    $.ajax({
-                        url: SERVER_URL + '/university/' + name,
-                        type: 'DELETE',
-                        success: function (result) {
-                            // Do something with the result
-                        },
-                    })
+                    if (validation()) {
+                        var obj = {
+                            name: $('#universityName').val(),
+                            phone: $('#universityPhone').val(),
+                            address: $('#universityAddress').val(),
+                        }
+                        console.log(obj)
+
+                        $.post({
+                            url: SERVER_URL + '/university/delete',
+                            contentType: 'application/json',
+                            data: JSON.stringify(obj),
+                            dataType: 'json',
+                            success: function (response) {
+                                alert('Successfully deleted!')
+                            },
+                        }).fail(function (error) {
+                            alert('Error: ' + error.responseText)
+                        })
+                    }
                 })
             </script>
         </div>

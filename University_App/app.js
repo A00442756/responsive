@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const url = 'mongodb://localhost/s_muotoe'
+// const url = 'http://dev.cs.smu.ca:8150'
 
 const app = express()
 app.use(express.json())
@@ -18,6 +19,6 @@ con.on('open', () => {
 
 const universityRouter = require('./routes/university')
 app.use('/university', universityRouter)
-app.listen(9000, () => {
+app.listen(8150, () => {
     console.log('Server connected')
 })
