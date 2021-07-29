@@ -5,6 +5,9 @@ const url = 'mongodb://localhost/s_muotoe'
 const app = express()
 app.use(express.json())
 
+const cors = require('cors')
+app.use(cors())
+
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const con = mongoose.connection
