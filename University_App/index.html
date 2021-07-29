@@ -5,6 +5,7 @@
         <title>University App</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="index.css" />
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- <script src="./index.js"></script> -->
@@ -29,9 +30,46 @@
                 <span class="navbar-brand mb-0 h1">University App</span>
             </div>
         </nav>
+        <nav class="nav nav-pills nav-fill">
+            <a class="nav-link active" aria-current="page" href="#search"
+                >Search</a
+            >
+            <a class="nav-link save" href="#save">Add New</a>
+            <a class="nav-link edit" href="#edit">Edit</a>
+            <a class="nav-link delete" href="#delete">Delete</a>
+            <!-- <a
+                class="nav-link disabled"
+                href="#"
+                tabindex="-1"
+                aria-disabled="true"
+                >Disabled</a
+            > -->
+        </nav>
+        <script>
+            $('.nav-link').on('click', function () {
+                $('.nav-link').removeClass('active')
+                $(this).addClass('active')
+                $('#search').addClass('hidden')
 
+                if ($(this).hasClass('save')) {
+                    $('.hidden').css('display', 'none')
+                    $('#addNew').css('display', 'inline')
+                    $('#deleteButton').css('display', 'none')
+                    $('#saveButton').css('display', 'inline')
+                } else if ($(this).hasClass('delete')) {
+                    $('.hidden').css('display', 'none')
+                    $('#addNew').css('display', 'inline')
+                    $('#saveButton').css('display', 'none')
+                    $('#deleteButton').css('display', 'inline')
+                } else {
+                    $('.hidden').css('display', 'none')
+                    $('#search').css('display', 'inline')
+                }
+            })
+        </script>
+        <script></script>
         <div class="container">
-            <form>
+            <form id="addNew" class="hidden">
                 <div class="form-group">
                     <label for="universityName">Name</label>
                     <input
@@ -70,7 +108,7 @@
                 </div>
                 <div class="mt-2">
                     <button
-                        type="button"
+                        type="submit"
                         class="btn btn-success"
                         id="saveButton"
                     >
@@ -86,7 +124,7 @@
                 </div>
             </form>
             <br />
-            <form>
+            <form id="search">
                 <div class="form-group">
                     <label for="searchUniversity">Search</label>
                     <input
@@ -96,20 +134,42 @@
                         id="searchUniversity"
                         required
                     />
-                    <button id="searchButton" class="btn btn-success mt-2">
+                    <button
+                        type="button"
+                        id="searchButton"
+                        class="btn btn-success mt-2"
+                    >
                         Search
                     </button>
                     <br />
                     <button
+                        type="button"
                         id="displayRecords"
                         class="btn btn-outline-success mt-2"
                     >
                         Display Records
                     </button>
                     <br />
-                    <table id="displayTable"></table>
+                    <table id="displayTable" class="table-bordered mt-5">
+                        <thead id="tblHead"></thead>
+                        <tbody id="tblBody"></tbody>
+                    </table>
                 </div>
             </form>
+            <br />
+
+            <script>
+                $('#deleteButton').click(function () {
+                    name = $('#deleteUninversity').val()
+                    $.ajax({
+                        url: SERVER_URL + '/university/' + name,
+                        type: 'DELETE',
+                        success: function (result) {
+                            // Do something with the result
+                        },
+                    })
+                })
+            </script>
         </div>
 
         <script>
@@ -148,7 +208,7 @@
             // const SERVER_URL = "http://dev.cs.smu.ca:8136"
             const SERVER_URL = 'http://localhost:9000'
             var data = []
-
+            var resp = []
             $('#saveButton').click(function () {
                 // validation();
 
@@ -171,6 +231,50 @@
                     }).fail(function (error) {
                         alert('Error: ' + error.responseText)
                     })
+                }
+            })
+            $('#searchButton').click(function () {
+                const universityName = $('#searchUniversity').val()
+                $.get({
+                    url: SERVER_URL + '/university/' + universityName,
+                    contentType: 'application/json',
+                    success: function (response) {
+                        var responseLength = response.length
+                        resp = response
+                        if (responseLength == 1) {
+                            alert(responseLength + ' record found')
+                        } else if (responseLength == 0) {
+                            alert('No record found')
+                        } else {
+                            alert(responseLength + ' records found')
+                        }
+                        console.log(response)
+                    },
+                }).fail(function (error) {
+                    alert('Error: ' + error.responseText)
+                })
+
+                // loadTable(response)
+            })
+            $('#displayRecords').click(function () {
+                $('#tblHead').html(
+                    '   <tr>' +
+                        '   <th>Name</th>' +
+                        '   <th>Address</th>' +
+                        '   <th>Phone</th>' +
+                        '   </tr>'
+                )
+                const table = document.getElementById('tblBody')
+                console.log(resp)
+                for (var i = 0; i < resp.length; i++) {
+                    var name = resp[i].name
+                    var address = resp[i].address
+                    var phone = resp[i].phone
+
+                    var r = table.insertRow()
+                    r.insertCell(-1).innerHTML = name
+                    r.insertCell(-1).innerHTML = address
+                    r.insertCell(-1).innerHTML = phone
                 }
             })
         </script>

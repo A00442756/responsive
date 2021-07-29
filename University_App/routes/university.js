@@ -12,9 +12,11 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:name', async (req, res) => {
     try {
-        const university = await University.findById(req.params.id)
+        const university = await University.find({
+            name: { $regex: req.params.name, $options: 'i' },
+        })
         res.json(university)
     } catch (err) {
         res.send('Error: ' + err)
@@ -39,6 +41,8 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/update/:id', async (req, res) => {
+    // University.updateOne({ name: ' Dinesh ' }, { $set: { name: 'Dinesh KG' } })
+
     try {
         University.findByIdAndUpdate(
             { _id: req.params.id },
