@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+// const ObjectId = require('mongodb').ObjectID;
+const { MongoClient, ObjectID } = require('mongodb');
 
 const University = require('../models/university')
 
@@ -36,7 +38,7 @@ router.post('/', async (req, res) => {
         const uni = await university.save()
         res.json(uni)
     } catch (err) {
-        res.send('Error: ' + err)
+        res.send(err)
     }
 })
 
@@ -58,19 +60,22 @@ router.post('/update/:id', async (req, res) => {
             }
         )
     } catch (err) {
-        res.send('Error: ' + err)
+        res.send(err)
     }
 })
 
 router.post('/delete', async (req, res) => {
     // University.updateOne({ name: ' Dinesh ' }, { $set: { name: 'Dinesh KG' } })
-
+    const university = await University.findOne(
+        { name: req.body.name },
+        { address: req.body.address },
+        { phone: req.body.phone }
+    )
+    console.log(university)
     try {
-        University.remove(
-            // { _id: req.params.id },
-            { name: req.body.name },
-            // { address: req.body.address },
-            // { phone: req.body.phone },
+        University.deleteOne(
+            { _id: university._id },
+            
             function (err, result) {
                 if (err) {
                     res.send(err)
@@ -80,7 +85,7 @@ router.post('/delete', async (req, res) => {
             }
         )
     } catch (err) {
-        res.send('Error: ' + err)
+        res.send(err)
     }
 })
 

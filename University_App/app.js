@@ -1,7 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const url = 'mongodb://localhost/s_muotoe'
-// const url = 'http://dev.cs.smu.ca:8150'
+// const url = 'mongodb://localhost/s_muotoe'
+const url = 'mongodb://s_muotoe:A00442756@localhost:27017/s_muotoe'
+
 
 const app = express()
 app.use(express.json())

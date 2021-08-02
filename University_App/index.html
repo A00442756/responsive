@@ -218,8 +218,8 @@
                 return true
             }
 
-            // const SERVER_URL = "http://dev.cs.smu.ca:8136"
-            const SERVER_URL = 'http://localhost:9000'
+            const SERVER_URL = 'http://dev.cs.smu.ca:8150'
+            // const SERVER_URL = 'http://localhost:9000'
             var data = []
             var resp = []
             $('#saveButton').click(function () {
@@ -277,7 +277,16 @@
                         '   <th>Phone</th>' +
                         '   </tr>'
                 )
+                // var row = document.getElementsByTagName('tbody')[0]
+
+                // function deleteRow() {
+                //     row.parentNode.removeChild(row)
+                // }
+                // deleteRow()
+                // row.parentNode.appendChild(row)
+                // $('#displayTable').html('<tbody id="tblBody"></tbody>')
                 const table = document.getElementById('tblBody')
+                table.innerHTML = ''
                 console.log(resp)
                 for (var i = 0; i < resp.length; i++) {
                     var name = resp[i].name
